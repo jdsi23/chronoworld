@@ -2,7 +2,6 @@ provider "aws" {
   region = "us-east-1"
 }
 
-# DynamoDB Table
 resource "aws_dynamodb_table" "chronoworld_showtimes" {
   name         = "ChronoWorldShowtimes"
   billing_mode = "PAY_PER_REQUEST"
@@ -18,7 +17,6 @@ resource "aws_dynamodb_table" "chronoworld_showtimes" {
   }
 }
 
-# IAM Role for Lambda
 resource "aws_iam_role" "chronoworld_lambda_role" {
   name = "chronoworld-lambda-role"
 
@@ -34,7 +32,6 @@ resource "aws_iam_role" "chronoworld_lambda_role" {
   })
 }
 
-# IAM Policy for Lambda to access DynamoDB
 resource "aws_iam_policy" "chronoworld_lambda_dynamodb_policy" {
   name = "chronoworld-lambda-dynamodb-policy"
 
@@ -61,13 +58,11 @@ resource "aws_iam_policy" "chronoworld_lambda_dynamodb_policy" {
   })
 }
 
-# Attach IAM Policy to IAM Role
 resource "aws_iam_role_policy_attachment" "attach_dynamodb_policy" {
   role       = aws_iam_role.chronoworld_lambda_role.name
   policy_arn = aws_iam_policy.chronoworld_lambda_dynamodb_policy.arn
 }
 
-# Lambda Function
 resource "aws_lambda_function" "chronoworld_lambda" {
   function_name    = "GetChronoWorldShowtimes"
   role             = aws_iam_role.chronoworld_lambda_role.arn
