@@ -47,11 +47,16 @@ resource "aws_iam_role" "chronoworld-lambda-role" {
   })
 }
 
-# Attach DynamoDB full access policy to the Lambda role
-resource "aws_iam_policy_attachment" "chronoworld-lambda-policy" {
-  name       = "chronoworld-lambda-policy"
-  roles      = [aws_iam_role.chronoworld-lambda-role.name]
+# Attach DynamoDB full access to Lambda role
+resource "aws_iam_role_policy_attachment" "chronoworld-dynamodb-policy" {
+  role       = aws_iam_role.chronoworld-lambda-role.name
   policy_arn = "arn:aws:iam::aws:policy/AmazonDynamoDBFullAccess"
+}
+
+# Attach CloudWatch Logs permission (required for Lambda)
+resource "aws_iam_role_policy_attachment" "chronoworld-logging-policy" {
+  role       = aws_iam_role.chronoworld-lambda-role.name
+  policy_arn = "arn:aws:iam::aws:policy/service-role/AWSLambdaBasicExecutionRole"
 }
 
 # Lambda Function
